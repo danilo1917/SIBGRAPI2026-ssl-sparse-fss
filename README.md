@@ -53,14 +53,34 @@ MAML, PANet and R2D2 adapt from sparse support masks, while ALPNet receives dens
 
 ## 1. How the framework works
 
-The pipeline has five stages. Each stage is one script, and each script reads the output of the previous one.
+The pipeline runs in five stages. Scripts are shown as rectangles and the files they produce as cylinders.
 
-```
-data/raw/            ──prepare_data.py──▶  data/processed/*.npy          (2D slices, splits)
-data/processed/*.npy ──generate_episodes.py──▶ data/processed/episodes_*.npz (fixed evaluation episodes)
-                     ──train.py / train_alpnet.py──▶ checkpoints/pseudo/*.pt
-checkpoints + episodes ──study_shots.py──▶ results/pseudo/<method>/shots/<dataset>/results.csv
-results.csv files    ──shots_table.py / plot_shots.py──▶ results/pseudo/tables/, results/pseudo/figures/
+```mermaid
+flowchart TD
+    raw[("data/raw/<br/>images and masks")]
+    prep["1 · prepare_data.py"]
+    proc[("data/processed/<br/>2D slices and splits")]
+    epi["2 · generate_episodes.py"]
+    man[("data/processed/<br/>episode manifests")]
+    train["3 · train.py<br/>train_alpnet.py"]
+    ckpt[("checkpoints/pseudo/<br/>model weights")]
+    evals["4 · study_shots.py"]
+    csv[("results/pseudo/<br/>results.csv per method")]
+    report["5 · shots_table.py<br/>plot_shots.py"]
+    out[("results/pseudo/<br/>table and figures")]
+
+    raw --> prep --> proc
+    proc --> epi --> man
+    proc --> train
+    man -- "validation episodes" --> train
+    train --> ckpt --> evals
+    man -- "shots episodes" --> evals
+    evals --> csv --> report --> out
+
+    classDef script fill:#fff2cc,stroke:#d6b656,color:#000
+    classDef files fill:#dae8fc,stroke:#6c8ebf,color:#000
+    class prep,epi,train,evals,report script
+    class raw,proc,man,ckpt,csv,out files
 ```
 
 **Pseudo-labels.** For each training slice, one of three superpixel algorithms (SLIC,
