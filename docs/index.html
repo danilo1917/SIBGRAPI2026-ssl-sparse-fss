@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Supervised Meta-Learning from Sparse Labels for Few-Shot Medical Image Segmentation</title>
+    <meta name="description" content="SIBGRAPI 2026. Few-shot medical image segmentation meta-trained on superpixel pseudo-labels and adapted from sparse annotations.">
+    <meta property="og:title" content="Self-Supervised Meta-Learning from Sparse Labels for Few-Shot Medical Image Segmentation">
+    <meta property="og:image" content="static/images/pipeline.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-gray: #353535;
+            --red-accent: #901812;
+            --gold-accent: #D1A705;
+            --gold-soft: #fbf5dc;
+        }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: var(--dark-gray);
+            background: #fafafa;
+            padding-top: 57px;
+        }
+
+        .navbar {
+            background: #fff !important;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .nav-link { color: var(--dark-gray) !important; }
+        .nav-link:hover { color: var(--red-accent) !important; }
+        .nav-link.active {
+            color: var(--red-accent) !important;
+            border-bottom: 2px solid var(--gold-accent);
+        }
+
+        .hero-section {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 4rem 0 3rem;
+            margin-bottom: 3rem;
+        }
+        .article-title {
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 1.2rem;
+        }
+        .journal-info { color: #666; font-size: 1.1rem; margin-bottom: .6rem; }
+        .hero-authors { font-size: 1.05rem; margin-bottom: .2rem; }
+        .hero-authors span { white-space: nowrap; }
+        .hero-affil { color: #777; margin-bottom: 1.6rem; }
+
+        .btn-paper {
+            background: var(--red-accent);
+            color: #fff;
+            border-radius: 4px;
+            padding: .5rem 1.1rem;
+            font-weight: 500;
+            font-size: .95rem;
+            margin: .25rem;
+        }
+        .btn-paper:hover { background: #6f120d; color: #fff; }
+        .btn-paper.disabled { background: var(--red-accent); color: #fff; opacity: .85; }
+        .btn-gold {
+            background: var(--gold-accent);
+            color: var(--dark-gray);
+            border-radius: 4px;
+            padding: .5rem 1.1rem;
+            font-weight: 500;
+            font-size: .95rem;
+            margin: .25rem;
+        }
+        .btn-gold:hover { background: #b8940a; color: var(--dark-gray); }
+        .btn-paper svg, .btn-gold svg { width: 1em; height: 1em; fill: currentColor; vertical-align: -.12em; margin-right: .35rem; }
+
+        .section-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: border-color .2s ease;
+        }
+        .section-card:hover { border-color: var(--gold-accent); }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gold-accent);
+            padding-bottom: .5rem;
+        }
+        .subsection-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+        }
+        .subsection-title:first-of-type { margin-top: 0; }
+
+        .keyword-tag {
+            display: inline-block;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            padding: .2rem .7rem;
+            margin: .2rem .3rem .2rem 0;
+            font-size: .85rem;
+        }
+
+        .figure-box {
+            border: 1px solid #eee;
+            padding: 1rem;
+            background: #fff;
+            margin-bottom: 1rem;
+        }
+        .figure-box img { width: 100%; height: auto; display: block; }
+        .figure-caption-text { color: #666; font-size: .9rem; margin-top: .6rem; text-align: center; }
+
+        .highlight {
+            border-left: 3px solid var(--gold-accent);
+            background: var(--gold-soft);
+            padding: 1rem 1.2rem;
+            height: 100%;
+        }
+        .highlight strong { display: block; margin-bottom: .2rem; }
+        .highlight span { font-size: .92rem; color: #555; }
+
+        .formula {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            padding: .7rem 1rem;
+            text-align: center;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 1.05rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .table { font-size: .9rem; font-variant-numeric: tabular-nums; margin-bottom: .5rem; }
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            border-bottom: 2px solid var(--gold-accent);
+            white-space: nowrap;
+        }
+        .table td { border-color: #f0f0f0; white-space: nowrap; }
+        .table td:not(:first-child), .table th:not(:first-child), .table thead tr + tr th { text-align: center; }
+        .table-text td, .table-text th { text-align: left !important; white-space: normal; }
+        .table tr.group td {
+            font-style: italic;
+            font-weight: 600;
+            background: #fdfaf0;
+            text-align: left;
+        }
+        .table td.best { font-weight: 700; color: var(--red-accent); }
+        .table tr.dense td { background: #fcfcfc; }
+        .table-caption { font-weight: 600; margin-bottom: .5rem; }
+        .table-note { font-size: .85rem; color: #777; }
+
+        .method-tag {
+            display: inline-block;
+            font-size: .8rem;
+            font-weight: 600;
+            padding: .05rem .5rem;
+            border-radius: 3px;
+        }
+        .tag-sparse { background: #e7f1e9; color: #1d6b3a; }
+        .tag-dense { background: #f7e3e2; color: var(--red-accent); }
+
+        .nav-tabs .nav-link { color: var(--dark-gray) !important; border-radius: 0; }
+        .nav-tabs .nav-link.active { border-bottom: 2px solid var(--gold-accent); color: var(--red-accent) !important; }
+
+        .author-card { text-align: center; padding-bottom: 1.5rem; }
+        .author-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+        .author-initials {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gold-soft);
+            border: 2px solid var(--gold-accent);
+            font-size: 2.6rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        .author-name { font-weight: 600; font-size: 1.1rem; margin-bottom: .3rem; }
+        .author-email { color: var(--red-accent); text-decoration: none; font-size: .9rem; }
+        .author-email:hover { text-decoration: underline; color: var(--red-accent); }
+
+        pre.bibtex {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            padding: 1.2rem;
+            font-size: .85rem;
+            margin: 0;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .bib-wrap { position: relative; }
+        .copy-btn {
+            position: absolute;
+            top: .6rem;
+            right: .6rem;
+            font-size: .8rem;
+            padding: .15rem .6rem;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        footer { color: #777; font-size: .9rem; padding: 1rem 0 3rem; text-align: center; }
+        a { color: var(--red-accent); }
+
+        @media (max-width: 576px) {
+            .section-card { padding: 1.2rem; }
+            .hero-section { padding: 2.5rem 0 2rem; }
+        }
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="80">
+
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+        <div class="container">
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-controls="navLinks" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navLinks">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#abstract">Abstract</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#method">Method</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#results">Results</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#more-results">More Results</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#authors">Authors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#citation">Citation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section text-center" id="home">
+        <div class="container" style="max-width: 960px;">
+            <h1 class="article-title">Self-Supervised Meta-Learning from Sparse Labels for Few-Shot Medical Image Segmentation</h1>
+            <p class="journal-info"><strong>Conference Paper</strong> • SIBGRAPI • 2026</p>
+            <p class="hero-authors">
+                <span>Danilo F. Vieira</span>,
+                <span>José Roberto Martins-Costa</span>,
+                <span>Marcos H. F. Ribeiro</span>,
+                <span>Daniel L. Fernandes</span>,
+                <span>Hugo N. Oliveira</span>
+            </p>
+            <p class="hero-affil">Department of Computer Science, Universidade Federal de Viçosa – UFV</p>
+            <div>
+                <!-- TODO(author): set the paper URL and remove "disabled" -->
+                <a class="btn btn-paper disabled" href="#" aria-disabled="true">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6zm8 1.5V8h4.5z"/></svg>Access Paper (soon)
+                </a>
+                <a class="btn btn-gold" href="https://github.com/danilo1917/SIBGRAPI2026-ssl-sparse-fss">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.7.3 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>Code
+                </a>
+                <a class="btn btn-gold" href="#citation">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z"/></svg>BibTeX
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container" style="max-width: 1100px;">
+
+        <!-- Abstract -->
+        <div class="section-card" id="abstract">
+            <h2 class="section-title">Abstract</h2>
+            <p>
+                The limited availability of annotated medical images remains a major obstacle to segmentation methods, since
+                producing pixel-level labels demands substantial time and expertise from clinical specialists. To mitigate this
+                challenge, this work formulates few-shot medical image segmentation as a self-supervised meta-learning problem,
+                where task adaptation is learned without access to ground-truth masks during training. In this setting,
+                pseudo-labels are generated automatically from unlabeled images, using superpixels and heuristic image cues, and
+                then sparsified to simulate realistic annotation conditions, enabling episodic meta-training under limited
+                supervision. During evaluation, adaptation is performed exclusively from sparse annotations derived from
+                ground-truth masks. Under the proposed framework, it is shown that employing R2D2 as the few-shot meta-learner
+                yields performance comparable to, and in some cases exceeding, that of the main baseline: ALPNet. Importantly,
+                both methods are trained using pseudo-labels and evaluated with ground-truth masks in the target task;
+                nevertheless, the proposed method relies on sparse annotations, in contrast to the dense supervision required by
+                the baseline.
+            </p>
+            <p class="mb-2">Keywords:</p>
+            <div class="mb-4">
+                <span class="keyword-tag">Few-Shot Segmentation</span>
+                <span class="keyword-tag">Meta-Learning</span>
+                <span class="keyword-tag">Self-Supervised Learning</span>
+                <span class="keyword-tag">Sparse Annotations</span>
+                <span class="keyword-tag">Medical Imaging</span>
+            </div>
+            <p class="mb-2">Overview:</p>
+            <div class="figure-box">
+                <img src="static/images/pipeline.png" alt="Framework overview: self-supervised meta-training on sparsified superpixel pseudo-labels (top) and few-shot evaluation with real sparse support masks on an unseen domain (bottom).">
+                <p class="figure-caption-text">
+                    <strong>Top:</strong> training episodes are built without ground-truth labels. A heuristic over superpixels
+                    yields a dense pseudo-label that is sparsified to meta-train MAML, PANet or R2D2.
+                    <strong>Bottom:</strong> the meta-learner adapts to an unseen domain from <em>k</em> real sparse support masks.
+                </p>
+            </div>
+            <div class="row g-3 mt-2">
+                <div class="col-md-6 col-lg-3"><div class="highlight"><strong>No labels in meta-training</strong><span>Supervision comes from superpixel pseudo-labels on unlabeled images.</span></div></div>
+                <div class="col-md-6 col-lg-3"><div class="highlight"><strong>Sparse supports</strong><span>Adaptation from points, grids, scribbles or partial contours.</span></div></div>
+                <div class="col-md-6 col-lg-3"><div class="highlight"><strong>Cross-modality</strong><span>Trained on CT, MRI and mammography; tested on chest and dental X-rays.</span></div></div>
+                <div class="col-md-6 col-lg-3"><div class="highlight"><strong>6 GB GPU</strong><span>All experiments run on a single laptop RTX 3050.</span></div></div>
+            </div>
+        </div>
+
+        <!-- Method -->
+        <div class="section-card" id="method">
+            <h2 class="section-title">Method</h2>
+
+            <h3 class="subsection-title">Pseudo-labels from superpixels</h3>
+            <p>
+                Each training image is split into superpixels with SLIC, Felzenszwalb or Watershed, chosen at random. Every
+                region is scored with three modality-agnostic cues: relative brightness, compactness and distance from the
+                image border. A seed is sampled among the four best regions, grown by up to two neighbours and cleaned,
+                giving a dense pseudo-label for a plausible anatomical structure.
+            </p>
+            <div class="figure-box">
+                <img src="static/images/anatomy_scores.png" alt="Region scores over SLIC superpixels: pixel brightness, compactness, interior and combined score.">
+                <p class="figure-caption-text">Region scores used to select the pseudo-label.</p>
+            </div>
+            <div class="figure-box">
+                <img src="static/images/pseudolabel_pipeline.png" alt="Pseudo-labeling steps from superpixels to the final pseudo-label.">
+                <p class="figure-caption-text">Pseudo-labeling procedure with SLIC superpixels.</p>
+            </div>
+
+            <h3 class="subsection-title">Sparsification</h3>
+            <p>
+                The dense pseudo-label becomes a ternary mask (foreground, background, unlabeled) using one of four modes
+                chosen uniformly. Unlabeled pixels are ignored by the loss, a masked combination of BCE (0.4) and Dice (0.6).
+            </p>
+            <div class="row g-3">
+                <div class="col-lg-6"><div class="figure-box mb-0"><img src="static/images/sparse_points.png" alt="Random point annotations."><p class="figure-caption-text">Random points</p></div></div>
+                <div class="col-lg-6"><div class="figure-box mb-0"><img src="static/images/sparse_grid.png" alt="Regular grid annotations."><p class="figure-caption-text">Regular grid</p></div></div>
+                <div class="col-lg-6"><div class="figure-box mb-0"><img src="static/images/sparse_scribbles.png" alt="Contour scribble annotations."><p class="figure-caption-text">Contour scribbles</p></div></div>
+                <div class="col-lg-6"><div class="figure-box mb-0"><img src="static/images/sparse_contours.png" alt="Partial contour annotations."><p class="figure-caption-text">Partial contour</p></div></div>
+            </div>
+
+            <h3 class="subsection-title">Episodic meta-training</h3>
+            <p>
+                Pseudo-labels are generated independently per image, so each training episode uses a single image: the
+                support holds the sparse pseudo-label and the query the dense one, under the same random geometric
+                transformation. Datasets are sampled in proportion to the square root of their size:
+            </p>
+            <div class="formula" data-tex="P(\text{episode from } \mathcal{D}_i) = \frac{\sqrt{|\mathcal{D}_i|}}{\sum_j \sqrt{|\mathcal{D}_j|}}">P(episode from D<sub>i</sub>) = √|D<sub>i</sub>| / Σ<sub>j</sub> √|D<sub>j</sub>|</div>
+
+            <h3 class="subsection-title">Meta-learners and datasets</h3>
+            <div class="table-responsive">
+                <table class="table table-hover table-text">
+                    <thead><tr><th>Method</th><th>Type</th><th>Support at test time</th></tr></thead>
+                    <tbody>
+                        <tr><td>MAML / MetaSGD</td><td>Gradient-based, first-order, U-Net backbone</td><td><span class="method-tag tag-sparse">sparse</span></td></tr>
+                        <tr><td>PANet</td><td>Prototype-based</td><td><span class="method-tag tag-sparse">sparse</span></td></tr>
+                        <tr><td>R2D2</td><td>Differentiable ridge regression, same encoder as PANet</td><td><span class="method-tag tag-sparse">sparse</span></td></tr>
+                        <tr><td>ALPNet (baseline)</td><td>Adaptive local prototype pooling</td><td><span class="method-tag tag-dense">dense</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive mt-3">
+                <table class="table table-hover table-text">
+                    <thead><tr><th>Dataset</th><th>Modality</th><th>Usage</th></tr></thead>
+                    <tbody>
+                        <tr><td>BraTS 2020</td><td>MRI</td><td>Meta-training</td></tr>
+                        <tr><td>CHAOS CT</td><td>CT</td><td>Meta-training</td></tr>
+                        <tr><td>HC Pediatric Cerebellum</td><td>MRI</td><td>Meta-training</td></tr>
+                        <tr><td>LiTS</td><td>CT</td><td>Meta-training</td></tr>
+                        <tr><td>MIAS</td><td>Mammography</td><td>Meta-training</td></tr>
+                        <tr><td>Multi-Organ CT BTCV</td><td>CT</td><td>Meta-training</td></tr>
+                        <tr><td>JSRT</td><td>Chest X-ray</td><td>Few-shot evaluation</td></tr>
+                        <tr><td>Panoramic</td><td>Dental X-ray</td><td>Few-shot evaluation</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="section-card" id="results">
+            <h2 class="section-title">Results</h2>
+            <p>
+                For each query image, five support sets are sampled for every <em>k</em> ∈ {1, 2, 3, 5, 7, 10}. Dice scores are
+                averaged per query image and shaded bands are 99% confidence intervals over query images. On JSRT, R2D2
+                overtakes ALPNet from <em>k</em> = 5 using only sparse supports; on Panoramic, ALPNet stays ahead but the gap
+                narrows as <em>k</em> grows.
+            </p>
+            <div class="row g-3">
+                <div class="col-lg-6"><div class="figure-box"><img src="static/images/shots_jsrt.png" alt="Dice versus number of support images on JSRT."></div></div>
+                <div class="col-lg-6"><div class="figure-box"><img src="static/images/shots_panoramic.png" alt="Dice versus number of support images on Panoramic."></div></div>
+            </div>
+
+            <div class="row g-4 mt-1">
+                <div class="col-lg-6">
+                    <div class="table-caption">JSRT — mean Dice</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>Method</th><th>1</th><th>2</th><th>3</th><th>5</th><th>7</th><th>10</th></tr></thead>
+                            <tbody>
+                                <tr><td>MAML</td><td>0.570</td><td>0.655</td><td>0.691</td><td>0.731</td><td>0.751</td><td>0.768</td></tr>
+                                <tr><td>PANet</td><td>0.501</td><td>0.534</td><td>0.550</td><td>0.571</td><td>0.583</td><td>0.597</td></tr>
+                                <tr><td>R2D2</td><td>0.652</td><td>0.735</td><td>0.777</td><td class="best">0.822</td><td class="best">0.846</td><td class="best">0.865</td></tr>
+                                <tr class="dense"><td>ALPNet†</td><td class="best">0.757</td><td class="best">0.795</td><td class="best">0.808</td><td>0.819</td><td>0.824</td><td>0.827</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="table-caption">Panoramic — mean Dice</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>Method</th><th>1</th><th>2</th><th>3</th><th>5</th><th>7</th><th>10</th></tr></thead>
+                            <tbody>
+                                <tr><td>MAML</td><td>0.518</td><td>0.568</td><td>0.602</td><td>0.640</td><td>0.665</td><td>0.687</td></tr>
+                                <tr><td>PANet</td><td>0.609</td><td>0.637</td><td>0.658</td><td>0.681</td><td>0.700</td><td>0.716</td></tr>
+                                <tr><td>R2D2</td><td>0.634</td><td>0.710</td><td>0.744</td><td>0.773</td><td>0.792</td><td>0.805</td></tr>
+                                <tr class="dense"><td>ALPNet†</td><td class="best">0.732</td><td class="best">0.770</td><td class="best">0.790</td><td class="best">0.804</td><td class="best">0.811</td><td class="best">0.817</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <p class="table-note">Columns give the number of support images <em>k</em>. Bold: best result per column. † Dense support masks.</p>
+
+            <h3 class="subsection-title">Qualitative comparison (<em>k</em> = 5)</h3>
+            <div class="row g-3">
+                <div class="col-lg-6"><div class="figure-box"><img src="static/images/qualitative_jsrt.png" alt="JSRT: query, ground truth, ALPNet and R2D2 predictions with Dice."><p class="figure-caption-text">JSRT</p></div></div>
+                <div class="col-lg-6"><div class="figure-box"><img src="static/images/qualitative_panoramic.png" alt="Panoramic: query, ground truth, ALPNet and R2D2 predictions with Dice."><p class="figure-caption-text">Panoramic</p></div></div>
+            </div>
+        </div>
+
+        <!-- More results -->
+        <div class="section-card" id="more-results">
+            <h2 class="section-title">More Results</h2>
+
+            <h3 class="subsection-title">Shot progression with the support set</h3>
+            <p>
+                One query image per dataset, with the ten support images, their ground-truth masks (given to ALPNet) and the
+                sparse masks (given to MAML, PANet and R2D2). The first <em>k</em> supports are used for each <em>k</em>.
+            </p>
+            <ul class="nav nav-tabs mb-3" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-prog-jsrt" data-bs-toggle="tab" data-bs-target="#prog-jsrt" type="button" role="tab" aria-controls="prog-jsrt" aria-selected="true">JSRT</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-prog-pano" data-bs-toggle="tab" data-bs-target="#prog-pano" type="button" role="tab" aria-controls="prog-pano" aria-selected="false">Panoramic</button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="prog-jsrt" role="tabpanel" aria-labelledby="tab-prog-jsrt">
+                    <div class="figure-box"><img src="static/images/progression_jsrt.png" alt="JSRT shot progression: ten support images with dense and sparse masks, and predictions of PANet, MAML, R2D2 and ALPNet for k from 1 to 10." loading="lazy"></div>
+                </div>
+                <div class="tab-pane fade" id="prog-pano" role="tabpanel" aria-labelledby="tab-prog-pano">
+                    <div class="figure-box"><img src="static/images/progression_panoramic.png" alt="Panoramic shot progression: ten support images with dense and sparse masks, and predictions of PANet, MAML, R2D2 and ALPNet for k from 1 to 10." loading="lazy"></div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Dice and mIoU at <em>k</em> = 5</h3>
+            <p>Mean over query images ± half-width of the 99% confidence interval.</p>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr><th rowspan="2">Method</th><th colspan="2">JSRT</th><th colspan="2">Panoramic</th></tr>
+                        <tr><th>Dice</th><th>mIoU</th><th>Dice</th><th>mIoU</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>MAML</td><td>0.731 ± 0.009</td><td>0.693 ± 0.008</td><td>0.640 ± 0.013</td><td>0.582 ± 0.011</td></tr>
+                        <tr><td>PANet</td><td>0.571 ± 0.013</td><td>0.495 ± 0.009</td><td>0.681 ± 0.011</td><td>0.568 ± 0.012</td></tr>
+                        <tr><td>R2D2</td><td class="best">0.822 ± 0.009</td><td class="best">0.774 ± 0.009</td><td>0.773 ± 0.010</td><td>0.681 ± 0.011</td></tr>
+                        <tr class="dense"><td>ALPNet†</td><td>0.819 ± 0.008</td><td>0.767 ± 0.008</td><td class="best">0.804 ± 0.012</td><td class="best">0.723 ± 0.017</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">Bold: best result per column. † Dense support masks.</p>
+
+            <h3 class="subsection-title">Dice per annotation mode (<em>k</em> = 5)</h3>
+            <p>
+                Support masks restricted to a single sparsification mode, evaluated on a separate set of episodes.
+                Grids give the best results for every method, and R2D2 is the strongest learner in every mode.
+            </p>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Method</th><th>Points</th><th>Grid</th><th>Scribbles</th><th>Contour</th><th>Mixed</th></tr></thead>
+                    <tbody>
+                        <tr class="group"><td colspan="6">JSRT</td></tr>
+                        <tr><td>MAML</td><td>0.676 ± 0.008</td><td>0.799 ± 0.008</td><td>0.703 ± 0.010</td><td>0.596 ± 0.012</td><td>0.730 ± 0.009</td></tr>
+                        <tr><td>PANet</td><td>0.553 ± 0.013</td><td>0.604 ± 0.015</td><td>0.550 ± 0.013</td><td>0.550 ± 0.013</td><td>0.569 ± 0.014</td></tr>
+                        <tr><td>R2D2</td><td class="best">0.738 ± 0.010</td><td class="best">0.867 ± 0.008</td><td class="best">0.794 ± 0.010</td><td class="best">0.760 ± 0.011</td><td class="best">0.821 ± 0.010</td></tr>
+                        <tr class="group"><td colspan="6">Panoramic</td></tr>
+                        <tr><td>MAML</td><td>0.582 ± 0.013</td><td>0.728 ± 0.011</td><td>0.615 ± 0.013</td><td>0.590 ± 0.014</td><td>0.643 ± 0.013</td></tr>
+                        <tr><td>PANet</td><td>0.676 ± 0.011</td><td>0.749 ± 0.010</td><td>0.642 ± 0.012</td><td>0.681 ± 0.011</td><td>0.687 ± 0.010</td></tr>
+                        <tr><td>R2D2</td><td class="best">0.709 ± 0.009</td><td class="best">0.817 ± 0.009</td><td class="best">0.769 ± 0.010</td><td class="best">0.747 ± 0.009</td><td class="best">0.776 ± 0.010</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">Mean over query images ± half-width of the 99% confidence interval. Bold: best result per column. ALPNet is not included, since it uses dense supports.</p>
+        </div>
+
+        <!-- Authors -->
+        <div class="section-card" id="authors">
+            <h2 class="section-title">Authors</h2>
+            <div class="row justify-content-center">
+                <div class="col-sm-6 col-lg-4">
+                    <div class="author-card">
+                        <img class="author-photo" src="static/images/authors/danilo.jpg" alt="Danilo F. Vieira">
+                        <div class="author-name">Danilo F. Vieira</div>
+                        <div class="text-muted mb-2">Universidade Federal de Viçosa – UFV</div>
+                        <a href="mailto:danilo.f.vieira@ufv.br" class="author-email">danilo.f.vieira@ufv.br</a>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="author-card">
+                        <!-- TODO(author): replace with a photo (static/images/authors/jose.jpg) -->
+                        <div class="author-initials" aria-hidden="true">JR</div>
+                        <div class="author-name">José Roberto Martins-Costa</div>
+                        <div class="text-muted mb-2">Universidade Federal de Viçosa – UFV</div>
+                        <a href="mailto:jose.junior5@ufv.br" class="author-email">jose.junior5@ufv.br</a>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="author-card">
+                        <img class="author-photo" src="static/images/authors/marcos.jpg" alt="Marcos H. F. Ribeiro">
+                        <div class="author-name">Marcos H. F. Ribeiro</div>
+                        <div class="text-muted mb-2">Universidade Federal de Viçosa – UFV</div>
+                        <a href="mailto:marcosh.ribeiro@ufv.br" class="author-email">marcosh.ribeiro@ufv.br</a>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="author-card">
+                        <img class="author-photo" src="static/images/authors/daniel.jpg" alt="Daniel L. Fernandes">
+                        <div class="author-name">Daniel L. Fernandes</div>
+                        <div class="text-muted mb-2">Universidade Federal de Viçosa – UFV</div>
+                        <a href="mailto:daniel.louzada@ufv.br" class="author-email">daniel.louzada@ufv.br</a>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="author-card">
+                        <img class="author-photo" src="static/images/authors/hugo.jpg" alt="Hugo N. Oliveira">
+                        <div class="author-name">Hugo N. Oliveira</div>
+                        <div class="text-muted mb-2">Universidade Federal de Viçosa – UFV</div>
+                        <a href="mailto:hugo.n.oliveira@ufv.br" class="author-email">hugo.n.oliveira@ufv.br</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Citation -->
+        <div class="section-card" id="citation">
+            <h2 class="section-title">Citation</h2>
+            <div class="bib-wrap">
+                <button class="btn copy-btn" type="button" id="copy-bib">Copy</button>
+<pre class="bibtex"><code id="bib">@inproceedings{vieira2026selfsupervised,
+  title     = {Self-Supervised Meta-Learning from Sparse Labels for Few-Shot Medical Image Segmentation},
+  author    = {Vieira, Danilo F. and Martins-Costa, Jos{\'e} Roberto and Ribeiro, Marcos H. F. and
+               Fernandes, Daniel L. and Oliveira, Hugo N.},
+  booktitle = {Conference on Graphics, Patterns and Images (SIBGRAPI)},
+  year      = {2026}
+}</code></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <a href="https://github.com/danilo1917/SIBGRAPI2026-ssl-sparse-fss">github.com/danilo1917/SIBGRAPI2026-ssl-sparse-fss</a>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            if (!window.katex) return;
+            document.querySelectorAll('[data-tex]').forEach(function (el) {
+                katex.render(el.dataset.tex, el, { displayMode: true, throwOnError: false });
+            });
+        });
+        document.getElementById('copy-bib').addEventListener('click', function () {
+            var btn = this;
+            var text = document.getElementById('bib').textContent;
+            if (!navigator.clipboard) return;
+            navigator.clipboard.writeText(text).then(function () {
+                btn.textContent = 'Copied';
+                setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+            });
+        });
+        document.querySelectorAll('#navLinks .nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                var menu = document.getElementById('navLinks');
+                if (menu.classList.contains('show')) bootstrap.Collapse.getOrCreateInstance(menu).hide();
+            });
+        });
+    </script>
+</body>
+</html>

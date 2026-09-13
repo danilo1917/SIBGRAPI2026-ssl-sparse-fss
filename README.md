@@ -6,8 +6,8 @@
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 Official implementation of **"Self-Supervised Meta-Learning from Sparse Labels for Few-Shot Medical
-Image Segmentation"** — Danilo F. Vieira, José Roberto Martins-Costa, Daniel L. Fernandes,
-Hugo N. Oliveira and Marcos H. F. Ribeiro (Universidade Federal de Viçosa).
+Image Segmentation"** — Danilo F. Vieira, José Roberto Martins-Costa, Marcos H. F. Ribeiro,
+Daniel L. Fernandes and Hugo N. Oliveira (Universidade Federal de Viçosa).
 
 **Paper:** *link to be added* <!-- TODO(author): add paper URL (and update the Paper badge) -->
 
@@ -190,8 +190,8 @@ and the [MONAI](https://github.com/Project-MONAI/MONAI) U-Net. The sparse annota
 ```bibtex
 @inproceedings{vieira2026selfsupervised,
   title     = {Self-Supervised Meta-Learning from Sparse Labels for Few-Shot Medical Image Segmentation},
-  author    = {Vieira, Danilo F. and Martins-Costa, Jos{\'e} Roberto and Fernandes, Daniel L. and
-               Oliveira, Hugo N. and Ribeiro, Marcos H. F.},
+  author    = {Vieira, Danilo F. and Martins-Costa, Jos{\'e} Roberto and Ribeiro, Marcos H. F. and
+               Fernandes, Daniel L. and Oliveira, Hugo N.},
   booktitle = {Conference on Graphics, Patterns and Images (SIBGRAPI)},
   year      = {2026}
 }
