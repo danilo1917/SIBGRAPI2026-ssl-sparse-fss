@@ -29,8 +29,8 @@ structure in an unseen imaging modality from only *k* sparsely annotated support
 | **R2D2** | meta-learner (closed-form ridge regression) | sparse | Bertinetto et al., ICLR 2019 | [bertinetto/r2d2](https://github.com/bertinetto/r2d2) |
 | **ALPNet** | baseline | **dense** | Ouyang et al., ECCV 2020 | [cheng-01037/Self-supervised-Fewshot-Medical-Image-Segmentation](https://github.com/cheng-01037/Self-supervised-Fewshot-Medical-Image-Segmentation) |
 
-All four methods use the same preprocessed data, the same evaluation episodes and the same evaluation
-script, so their results are directly comparable.
+All four methods are evaluated on the same query and support images with the same evaluation script.
+MAML, PANet and R2D2 adapt from sparse support masks, while ALPNet receives dense ones.
 
 ---
 
