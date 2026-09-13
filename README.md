@@ -267,10 +267,10 @@ for evaluation. Several of them were converted from their original distribution 
 | `chaos_ct` | CHAOS (CT) | train | CT | liver | [Zenodo](https://zenodo.org/records/3431873) | Kavur et al. 2021 |
 | `hc_pediatric_cerebellum_highresnet` | HC Pediatric Cerebellum | train | MRI | cerebellum | private | — |
 | `lits` | LiTS | train | CT | liver tumour | [CodaLab](https://competitions.codalab.org/competitions/17094) | Bilic et al. 2023 |
-| `mias` | MIAS | train | mammography | breast | [Apollo, University of Cambridge](https://doi.org/10.17863/CAM.105113) | Suckling et al. 2015 |
+| `mias` | MIAS | train | mammography | breast | [Apollo, University of Cambridge](https://www.repository.cam.ac.uk/items/b6a97f0c-3b9b-40ad-8f18-3d121eef1459) | Suckling et al. 2015 |
 | `multiorgan_ct_btcv` | BTCV | train | CT | abdominal organs | [Synapse](https://www.synapse.org/Synapse:syn3193805) | Landman et al. 2015 |
-| `jsrt` | JSRT, with SCR lung masks | test | chest X-ray | lungs | [JSRT](http://db.jsrt.or.jp/eng.php), [SCR](https://zenodo.org/records/7056076) | Shiraishi et al. 2000; van Ginneken et al. 2006 |
-| `panoramic` | Panoramic Dental X-rays | test | panoramic X-ray | mandible | [Mendeley Data](https://data.mendeley.com/datasets/hxt48yk462/2) | Abdi et al. 2015 |
+| `jsrt` | JSRT | test | chest X-ray | lungs | [AJR](https://ajronline.org/doi/full/10.2214/ajr.174.1.1740071) | Shiraishi et al. 2000 |
+| `panoramic` | Panoramic Dental X-rays | test | panoramic X-ray | mandible | [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4652330/) | Abdi et al. 2015 |
 
 Each dataset is subject to its own terms of use. HC Pediatric Cerebellum is private; the framework runs with
 any subset of the training datasets. BibTeX entries are in [Section 11](#11-citation).
@@ -765,7 +765,8 @@ If you use this code, please cite the paper:
   author  = {Bilic, Patrick and others},
   journal = {Medical Image Analysis},
   volume  = {84}, pages = {102680},
-  year    = {2023}
+  year    = {2023},
+  doi     = {10.1016/j.media.2022.102680}
 }
 
 @misc{suckling2015mias,
@@ -792,21 +793,13 @@ If you use this code, please cite the paper:
   year    = {2000}
 }
 
-@article{vanginneken2006scr,
-  title   = {Segmentation of anatomical structures in chest radiographs using supervised methods:
-             a comparative study on a public database},
-  author  = {van Ginneken, Bram and Stegmann, Mikkel B. and Loog, Marco},
-  journal = {Medical Image Analysis},
-  volume  = {10}, number = {1}, pages = {19--40},
-  year    = {2006}
-}
-
 @article{abdi2015panoramic,
   title   = {Automatic segmentation of mandible in panoramic x-ray},
   author  = {Abdi, Amir Hossein and Kasaei, Shohreh and Mehdizadeh, Mojdeh},
   journal = {Journal of Medical Imaging},
   volume  = {2}, number = {4}, pages = {044003},
-  year    = {2015}
+  year    = {2015},
+  doi     = {10.1117/1.JMI.2.4.044003}
 }
 ```
 
