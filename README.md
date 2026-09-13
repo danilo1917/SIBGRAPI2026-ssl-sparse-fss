@@ -146,17 +146,11 @@ python3.10 -m venv env
 source env/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+pip install --no-deps learn2learn==0.2.0
 ```
 
-`requirements.txt` does not pin versions. For an exact match with the paper, install PyTorch 2.5.1 and
-torchvision 0.20.1 for your CUDA version first (see [pytorch.org](https://pytorch.org/get-started/previous-versions/)),
-then the requirements. The versions used to produce the reported results were:
-
-```
-torch 2.5.1   torchvision 0.20.1   monai 1.5.2   learn2learn 0.2.0   numpy 2.2.6
-scipy 1.15.3  scikit-image 0.25.2  scikit-learn 1.7.2   pandas 2.3.3   nibabel 5.4.2
-Pillow 12.2.0 opencv-python-headless 4.13.0   matplotlib 3.10.8
-```
+The versions are the ones used for the paper. If you need a PyTorch build for a different CUDA version,
+install it first following [pytorch.org](https://pytorch.org/get-started/previous-versions/).
 
 Check the installation:
 
