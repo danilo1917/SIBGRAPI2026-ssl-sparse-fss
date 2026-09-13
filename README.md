@@ -132,10 +132,27 @@ Where to look in the code:
 | Query-level mean and 99 % confidence interval | [`sslfss/stats.py`](sslfss/stats.py) |
 
 `generate_episodes.py` does not overwrite existing manifests; delete all `data/processed/episodes_*.npz`
-to generate new ones. For ALPNet, the paper uses the final checkpoint, `sslfss_alpnet_last.pt`.
+to generate new ones.
 
-New methods implement `FewShotMethod` ([`sslfss/methods/base.py`](sslfss/methods/base.py)) and are registered in
-[`sslfss/methods/factory.py`](sslfss/methods/factory.py).
+### Adding a meta-learner
+
+Every method implements `FewShotMethod` in [`sslfss/methods/base.py`](sslfss/methods/base.py).
+
+| Needed for | Methods |
+|---|---|
+| Evaluation | `name`, `load_model`, `predict` |
+| Training with `train.py` | `run_name`, `batch_size`, `build_model`, `optimizer_step`, `scheduler_step`, `val_episode`, `checkpoint_state` |
+
+`predict` receives `(H, W)` images in [0, 1] and support masks in {-1, 0, 1} (unlabelled, background,
+foreground), and returns a binary `(H, W)` mask. Signatures are in `base.py`.
+
+To register it:
+
+1. add it to [`sslfss/methods/factory.py`](sslfss/methods/factory.py);
+2. add its name to the `--method` choices in [`scripts/train.py`](scripts/train.py) and [`scripts/study_shots.py`](scripts/study_shots.py);
+3. add it to `METHODS` and the label/style dictionaries in [`scripts/shots_table.py`](scripts/shots_table.py) and [`scripts/plot_shots.py`](scripts/plot_shots.py).
+
+[`sslfss/methods/r2d2_method.py`](sslfss/methods/r2d2_method.py) is a compact example.
 
 ## Results
 
