@@ -167,7 +167,6 @@ PANet and R2D2 follow their reference implementations; MAML uses [learn2learn](h
 and the [MONAI](https://github.com/Project-MONAI/MONAI) U-Net. The sparse annotation protocol follows
 [Oliveira et al. 2024](https://github.com/hugo-oliveira/fsws_metalearning) and [WeaSeL](https://github.com/pedrohtg/weasel).
 
-This work was supported by the Serrapilheira Institute (grant #R-2011-37776) and CAPES.
 
 ## Citation
 
