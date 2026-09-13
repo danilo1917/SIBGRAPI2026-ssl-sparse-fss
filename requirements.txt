@@ -1,0 +1,13 @@
+torch>=2.0.0
+torchvision
+learn2learn
+monai
+numpy
+scipy
+scikit-image
+scikit-learn
+pandas
+nibabel
+Pillow
+opencv-python-headless
+matplotlib

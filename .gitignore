@@ -1,0 +1,33 @@
+# NOTE: the project-data patterns below are anchored with a leading "/" so they
+# match only at the repository root. Without it, "data/" would also match the
+# source package sslfss/data/.
+
+# Model weights produced by training
+/checkpoints/
+*.pt
+
+# Datasets and derived arrays (~81 GB, and most sources are not redistributable —
+# see README for how to obtain and prepare them)
+/data/
+
+# Generated results and figures
+/results/
+
+# Python
+__pycache__/
+*.py[cod]
+.Python
+
+# Virtual environments
+/env/
+/venv/
+/.venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
