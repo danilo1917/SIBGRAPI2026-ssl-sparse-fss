@@ -613,8 +613,6 @@ This work builds on the following code and ideas. Please credit them when you us
 | U-Net backbone of MAML | [MONAI](https://github.com/Project-MONAI/MONAI) (Cardoso et al.) | Apache 2.0 |
 | Sparsification modes, weakly-supervised few-shot protocol | Oliveira et al. 2024 ([code](https://github.com/hugo-oliveira/fsws_metalearning)) and Gama et al. 2022 ([WeaSeL](https://github.com/pedrohtg/weasel)) | — |
 
-This research was supported by the Serrapilheira Institute (grant #R-2011-37776) and CAPES.
-
 ---
 
 ## 11. Citation
