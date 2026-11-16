@@ -13,6 +13,8 @@ Daniel L. Fernandes and Hugo N. Oliveira (Universidade Federal de Viçosa).
 
 **Interactive Demo:** https://huggingface.co/spaces/danilo04/ssl-sparse-fss
 
+**Project Page:** https://danilo1917.github.io/SIBGRAPI2026-ssl-sparse-fss/
+
 Meta-learners are trained on superpixel pseudo-labels, sparsified to imitate cheap annotations, and then
 adapted to unseen structures and modalities from *k* sparsely annotated support images.
 
