@@ -9,7 +9,9 @@ Official implementation of **"Self-Supervised Meta-Learning from Sparse Labels f
 Image Segmentation"** — Danilo F. Vieira, José Roberto Martins-Costa, Marcos H. F. Ribeiro,
 Daniel L. Fernandes and Hugo N. Oliveira (Universidade Federal de Viçosa).
 
-**Paper:** *link to be added* <!-- TODO(author): add paper URL (and update the Paper badge) -->
+**Paper:** http://sibgrapi.sid.inpe.br/col/sid.inpe.br/sibgrapi/2026/09.26.13.58/doc/204_Self-Supervised%20Meta-Learning%20from%20Sparse%20Labels%20for%20Few-Shot%20Medical%20Image%20Segmentation.pdf
+
+**Interactive Demo:** https://huggingface.co/spaces/danilo04/ssl-sparse-fss
 
 Meta-learners are trained on superpixel pseudo-labels, sparsified to imitate cheap annotations, and then
 adapted to unseen structures and modalities from *k* sparsely annotated support images.
